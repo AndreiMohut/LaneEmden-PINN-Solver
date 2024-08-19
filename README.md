@@ -13,28 +13,46 @@ where:
 - $\theta(\xi)$ is the dimensionless density,
 - $n$ is the polytropic index.
 
+## Known Analytical Solutions
+
+For certain values of the polytropic index \( n \), the Lane-Emden equation has known analytical solutions:
+
+- **For \( n = 0 \):** 
+  $$ \theta(\xi) = 1 - \frac{\xi^2}{6} $$
+
+- **For \( n = 1 \):** 
+  $$ \theta(\xi) = \frac{\sin(\xi)}{\xi} $$
+
+- **For \( n = 5 \):** 
+  $$ \theta(\xi) = \frac{1}{\sqrt{1 + \frac{\xi^2}{3}}} $$
+
+These solutions are used to validate the numerical and PINN-based methods implemented in this repository. 
+
 ## Overview
 
 This implementation uses a Physics-Informed Neural Network (PINN) to solve the Lane-Emden equation. The PINN leverages neural networks to approximate the solution while incorporating the physics of the differential equation into the loss function.
 
 ### Key Features
 
-- **Multiple Activation Functions**: The neural network model uses different activation functions for each layer.
-- **Residual Calculation**: The residual of the Lane-Emden equation is computed using TensorFlow's automatic differentiation.
-- **Boundary Conditions**: The loss function includes terms to enforce boundary conditions at the origin.
+- **Flexible Neural Network Architecture:** The PINN architecture can be easily customized by adjusting the model configuration in `config.py`.
+- **Numerical Differentiation:** The PINN model computes derivatives using both automatic differentiation and finite difference methods for flexibility and accuracy.
+- **Comprehensive Testing:** The repository includes unit and integration tests, ensuring the robustness of the implementation.
+- **Boundary Conditions:** The loss function includes terms to enforce boundary conditions at the origin.
 
 ### Training Process
 
-1. **Data Generation**: Generate training data points for the radial coordinate \( $\xi$ \).
-2. **Residual Calculation**: Compute the residual of the Lane-Emden equation using TensorFlow's GradientTape.
+1. **Data Generation**: Generate training data points for the radial coordinate \( \xi \) and polytropic index \( n \).
+2. **Residual Calculation**: Compute the residual of the Lane-Emden equation using both automatic differentiation and finite difference methods.
 3. **Loss Function**: The loss function consists of the mean squared error of the residuals and the boundary conditions:
    - Residual loss: Ensures the neural network output satisfies the Lane-Emden equation.
    - Boundary loss: Ensures the neural network output meets the specified boundary conditions.
 4. **Optimization**: The model is trained using the Adam optimizer with a specified learning rate.
 
-## Possible State-of-the-Art Improvements
+### How to Run the Project
 
-1. Deep Ritz method, Deep Galerkin Method, Finite Basis PINNs (FBPINNs)
-2. Adaptive Loss Weighting and Non-Dimensionalization: Utilize adaptive loss weighting schemes based on the magnitude of back-propagated gradients and Neural Tangent Kernel (NTK) theory to balance different loss terms during training.
-3. Utilizing advanced optimization techniques, such as L-BFGS, or developing custom training loops, can significantly improve the convergence rates and stability of PINNs
-
+```bash
+git clone https://github.com/yourusername/LaneEmden-PINN-Solver.git
+cd LaneEmden-PINN-Solver
+pytest tests/
+python src/main.py
+```
