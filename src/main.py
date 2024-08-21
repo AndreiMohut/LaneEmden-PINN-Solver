@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 from model import PINN
@@ -7,6 +8,7 @@ from utils.plotting_utils import plot_results, plot_extrapolation_results
 from config import MODEL_CONFIG, TRAINING_CONFIG
 
 if __name__ == "__main__":
+    # Generate training data
     t_n = generate_training_data(TRAINING_CONFIG['num_points'], TRAINING_CONFIG['n_values'])
     t = t_n[:, 0:1]  # Extract t values
     n = t_n[:, 1:2]  # Extract n values
@@ -28,6 +30,15 @@ if __name__ == "__main__":
 
     # Train model
     model = train_model(model, t_n, t_boundary, n_boundary, theta_boundary, dtheta_dt_boundary)
+
+    # Generate a name for the saved model file
+    model_filename = f"pinn_model_epochs_{TRAINING_CONFIG['num_epochs']}_lr_{TRAINING_CONFIG['learning_rate']}.pth"
+    model_path = os.path.join("models", model_filename)
+
+    # Save the model
+    os.makedirs("models", exist_ok=True)
+    torch.save(model.state_dict(), model_path)
+    print(f"Model saved to {model_path}")
 
     # Generate predictions
     t_test = np.linspace(0.01, 10, TRAINING_CONFIG['num_points'])

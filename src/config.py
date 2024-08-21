@@ -16,7 +16,7 @@ MODEL_CONFIG = {
 
 # Training configuration
 TRAINING_CONFIG = {
-    "num_epochs": 50000,
+    "num_epochs": 30001,
     "learning_rate": 0.001,
     "num_points": 100,
     "n_values": [0, 1, 2, 3, 4, 5],  # Polytropic indices for training
